@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusTama</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/images/icon.png" type="image/png">
+</head>
+<body>
+    <div id="device-wrapper">
+        <button id="settings-btn" class="gear-btn">⚙</button>
+        <div id="device">
+            <div id="game-container">
+                <h1>FocusTama</h1>
+
+                <div id="screen">
+                    <!-- Screen Menu -->
+                    <div id="screen-menu">
+                        <button id="view-pet-btn" class="screen-toggle-btn active">PET</button>
+                        <button id="view-graph-btn" class="screen-toggle-btn">GRAPH</button>
+                    </div>
+
+                    <div id="sky-gradient"></div>
+                    <div class="scanline-overlay"></div>
+                    
+                    <!-- Pet View Container -->
+                    <div id="pet-view">
+                        <div id="pet-thought-bubble" class="hidden">...</div>
+                        <canvas id="pet-canvas" width="128" height="128"></canvas>
+                        <div id="stats-container">
+                            <div class="stat"><label>HAPPINESS</label><progress id="happiness-bar" max="100"></progress></div>
+                            <div class="stat"><label>HUNGER</label><progress id="hunger-bar" max="100"></progress></div>
+                            <div class="stat"><label>ENERGY</label><progress id="energy-bar" max="100"></progress></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task Graph Container -->
+                    <div id="task-graph-container" class="hidden">
+                        <div id="task-graph-title">Focus Streak</div>
+                        <div id="task-graph-grid"></div>
+                    </div>
+                </div>
+
+                <div id="controls">
+                    <div id="timer-display">25:00</div>
+                    <div id="task-area">
+                        <select id="task-select"><option value="">-- ADD A TASK TO FOCUS --</option></select>
+                        <form id="task-form"><input type="text" id="task-input" placeholder="New Task..." required maxlength="30"><button type="submit">+</button></form>
+                    </div>
+                    <button id="start-timer-btn" disabled>SELECT A TASK</button>
+                    
+                    <div class="action-buttons">
+                        <button id="feed-btn">FEED</button>
+                        <button id="chat-toggle-btn">CHAT</button>
+                    </div>
+
+                    <div id="chat-container" class="hidden">
+                        <form id="chat-form">
+                            <input type="text" id="chat-input" placeholder="Say something..." required maxlength="100">
+                            <button type="submit">→</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="brand">Model: F-T 1996 <span id="version">v3.0 PRO</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Name Entry Modal (New) -->
+    <div id="name-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Welcome to FocusTama!</h2>
+            <p>What should your pet call you?</p>
+            <form id="name-form">
+                <input type="text" id="name-input" placeholder="Enter your name..." required maxlength="15">
+                <button type="submit" id="start-journey-btn">START</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feeding Modal -->
+    <div id="feed-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Choose a Snack!</h2>
+            <div class="slider-container">
+                <button id="prev-food-btn"><</button>
+                <div class="food-slider-viewport">
+                    <div id="food-slider"></div>
+                </div>
+                <button id="next-food-btn">></button>
+            </div>
+            <p id="food-description">A healthy fruit to fill the tummy.</p>
+            <div class="modal-actions">
+                <button id="confirm-feed-btn">FEED</button>
+                <button id="cancel-feed-btn">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Completion Reward Modal -->
+    <div id="reward-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Task Complete!</h2>
+            <p>Choose a food reward!</p>
+            <div class="slider-container">
+                <button id="prev-reward-btn"><</button>
+                <div class="food-slider-viewport">
+                    <div id="reward-slider"></div>
+                </div>
+                <button id="next-reward-btn">></button>
+            </div>
+            <p id="reward-description">A healthy fruit to fill the tummy.</p>
+            <div class="modal-actions">
+                <button id="confirm-reward-btn">CHOOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <div class="settings-grid">
+                <label>Focus Time (min):</label>
+                <input type="number" id="setting-focus-time" min="5" step="5">
+                <label>Break Time (min):</label>
+                <input type="number" id="setting-break-time" min="1" step="1">
+                <label>Sound:</label>
+                <button id="setting-sound-toggle">ON</button>
+            </div>
+            <div class="modal-actions">
+                <button id="save-settings-btn">SAVE</button>
+                <button id="cancel-settings-btn">CANCEL</button>
+            </div>
+            <button id="reset-progress-btn">Reset Progress</button>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Elements -->
+    <audio id="audio-click" src="assets/audio/click.mp3" preload="auto"></audio>
+    <audio id="audio-success" src="assets/audio/success.mp3" preload="auto"></audio>
+    <audio id="audio-feed" src="assets/audio/feed.mp3" preload="auto"></audio>
+    <audio id="audio-sad" src="assets/audio/sad.mp3" preload="auto"></audio>
+    <audio id="audio-evolve"src="assets/audio/evolve.mp3" preload="auto"></audio>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
