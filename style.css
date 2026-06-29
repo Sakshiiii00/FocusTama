@@ -1,0 +1,265 @@
+:root {
+    --day-bg: #87CEEB; --day-device: #dee2e6; --day-text: #212529;
+    --dusk-bg: #483D8B; --dusk-device: #adb5bd; --dusk-text: #f8f9fa;
+    --night-bg: #1a1a2e; --night-device: #495057; --night-text: #ced4da;
+    
+    --device-color: var(--day-device);
+    --text-color: var(--day-text);
+    --screen-bg: #9bbc0f;
+    --screen-dark: #0f380f;
+    --button-color: #495057;
+    --button-shadow: #212529;
+    --accent-color: #d9480f;
+    --accent-shadow: #a6360a;
+    --graph-green: #39d353;
+    --screen-bg-night: #2c3e50;      
+    --screen-text-night: #ecf0f1;     
+}
+
+
+
+body {
+    background-color: var(--day-bg);
+    background-image: 
+        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+        radial-gradient(rgba(255,255,255,.4), rgba(255,255,255,.1) 2px, transparent 30px);
+    background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px; 
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
+    animation: move-stars 200s linear infinite;
+
+    /* All other styles remain the same */
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    transition: background-color 2s ease-in-out;
+}
+
+#device-wrapper { position: relative; }
+#device {
+    background: var(--device-color); color: var(--text-color);
+    padding: 25px; border-radius: 20px;
+    border: 3px solid rgba(255,255,255,0.7);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 10px 20px rgba(0,0,0,0.5);
+    position: relative; width: 90vw; max-width: 420px;
+    transition: background-color 2s ease-in-out, color 2s ease-in-out;
+}
+#game-container { text-align: center; }
+h1 { color: var(--screen-dark); text-shadow: 2px 2px #e9ecef; font-size: 24px; margin-bottom: 15px; }
+#screen {
+    background-color: var(--screen-bg); border: 10px solid #343a40;
+    border-radius: 10px 10px 50px 10px / 10px 10px 50px 10px;
+    padding: 10px; margin: 0 auto 20px; position: relative;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5); overflow: hidden; image-rendering: pixelated;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+}
+/* --- NEW: NIGHT MODE STYLES FOR ON-SCREEN ELEMENTS --- */
+
+#screen.night-mode {
+    background-color: var(--screen-bg-night);
+    border-color: #000;
+}
+
+#screen.night-mode .stat label,
+#screen.night-mode #task-graph-title {
+    color: var(--screen-text-night);
+}
+
+#screen.night-mode progress {
+    border-color: var(--screen-text-night);
+    background-color: rgba(236, 240, 241, 0.2); /* Faded-out part of the bar */
+}
+
+#screen.night-mode progress::-webkit-progress-bar {
+    background-color: rgba(236, 240, 241, 0.2);
+}
+
+#screen.night-mode progress::-webkit-progress-value,
+#screen.night-mode progress::-moz-progress-bar {
+    background-color: var(--screen-text-night); /* Filled part of the bar */
+}
+
+#screen.night-mode .screen-toggle-btn {
+    background: rgba(236, 240, 241, 0.2);
+    color: var(--screen-text-night);
+    border-color: var(--screen-text-night);
+}
+
+#screen.night-mode .screen-toggle-btn.active {
+    background: var(--screen-text-night);
+    color: var(--screen-bg-night);
+}
+
+#sky-gradient {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    transition: background-color 2s ease-in-out; z-index: 0;
+}
+.scanline-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.05) 50%);
+    background-size: 100% 4px; pointer-events: none; z-index: 2;
+}
+#pet-view {
+    position: relative; z-index: 1; flex-grow: 1;
+    display: flex; flex-direction: column; justify-content: center; 
+}
+#pet-view.hidden { display: none; }
+#pet-canvas { width: 128px; height: 128px; margin: 0 auto; }
+#stats-container { display: flex; justify-content: space-between; gap: 10px; padding: 5px; }
+@keyframes pop-in { 0% { transform: scale(0.5) translateY(10px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+#pet-thought-bubble {
+    background-color: #fff; color: var(--screen-dark); border: 3px solid var(--screen-dark);
+    border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.4;
+    position: absolute; top: 25px; left: 10px; right: 10px;
+    min-height: 40px; z-index: 10;
+    animation: pop-in 0.3s ease-out;
+}
+#pet-thought-bubble.hidden { display: none; }
+.stat { width: 30%; text-align: center; }
+.stat label { font-size: 10px; color: var(--screen-dark); display: block; margin-bottom: 3px; }
+progress {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 12px;
+    border: 2px solid var(--screen-dark); background-color: rgba(15, 56, 15, 0.4);
+}
+progress::-webkit-progress-bar { background-color: rgba(15, 56, 15, 0.4); }
+progress::-webkit-progress-value { background-color: var(--screen-dark); transition: width 0.3s ease; }
+progress::-moz-progress-bar { background-color: var(--screen-dark); }
+#screen-menu {
+    display: flex; gap: 5px; padding-bottom: 8px; border-bottom: 3px solid var(--screen-dark);
+    margin-bottom: 8px; position: relative; z-index: 3;
+}
+.screen-toggle-btn {
+    flex-grow: 1; background: rgba(15, 56, 15, 0.4); color: var(--screen-dark);
+    border: 2px solid var(--screen-dark); padding: 4px; font-size: 10px; box-shadow: none;
+}
+.screen-toggle-btn.active { background: var(--screen-dark); color: var(--screen-bg); }
+#task-graph-container {
+    flex-grow: 1; display: flex; flex-direction: column;
+    z-index: 1; overflow: hidden;
+}
+#task-graph-container.hidden { display: none; }
+#task-graph-title { color: var(--screen-dark); font-size: 12px; margin-bottom: 10px; text-align: center; }
+#task-graph-grid {
+    display: grid; grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(7, 1fr); gap: 4px;
+    width: 100%; flex-grow: 1;
+}
+.graph-day-box { background-color: rgba(15, 56, 15, 0.4); border: 1px solid rgba(15, 56, 15, 0.6); border-radius: 2px; }
+.graph-day-box.completed { background-color: var(--graph-green); border: 1px solid var(--screen-dark); }
+#controls { padding: 10px; }
+#timer-display { font-size: 42px; background-color: var(--screen-dark); color: var(--screen-bg); padding: 10px; border-radius: 5px; text-shadow: 2px 2px #000; margin-bottom: 15px; }
+#task-area { margin-bottom: 10px; }
+
+/* NEW/MODIFIED: Ensure interactive elements get a pointer cursor */
+button, a, select, input[type="text"], input[type="number"] {
+    cursor: pointer !important;
+}
+
+#task-select, #task-input, #task-form button, .settings-grid input { font-family: 'Press Start 2P', cursive; background: #fff; border: 2px solid var(--button-shadow); padding: 8px; font-size: 10px; width: 100%; border-radius: 5px; box-sizing: border-box; }
+#task-form { display: flex; margin-top: 5px; }
+#task-form button { width: 45px; margin-left: 5px; padding: 8px 0; }
+#start-timer-btn { width: 100%; margin-bottom: 15px; background-color: var(--accent-color); box-shadow: 0 5px 0 var(--accent-shadow); font-size: 12px; padding: 15px 10px; }
+button { 
+    font-family: 'Press Start 2P', cursive; color: #fff; border: none; border-radius: 8px; 
+    padding: 12px 18px; transition: all 0.1s ease-in-out;
+}
+button:disabled { opacity: 0.6; cursor: not-allowed !important; }
+button:active:not(:disabled) { transform: translateY(3px); }
+#start-timer-btn:active:not(:disabled) { box-shadow: 0 2px 0 var(--accent-shadow); }
+.action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.action-buttons button { background-color: var(--button-color); box-shadow: 0 5px 0 var(--button-shadow); }
+.action-buttons button:active:not(:disabled) { box-shadow: 0 2px 0 var(--button-shadow); }
+.brand { font-size: 10px; color: inherit; opacity: 0.7; margin-top: 15px; }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 1; transition: opacity 0.3s ease; }
+.modal-overlay.hidden { opacity: 0; pointer-events: none; }
+.modal-content { background-color: var(--device-color); color: var(--text-color); padding: 25px; border-radius: 15px; border: 5px solid var(--button-shadow); text-align: center; width: 90%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.modal-content h2 { color: var(--accent-color); text-shadow: 2px 2px var(--accent-shadow); margin-bottom: 20px; }
+.slider-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+.food-slider-viewport { width: 150px; height: 120px; overflow: hidden; margin: 0 10px; }
+#food-slider, #reward-slider { display: flex; transition: transform 0.3s ease-in-out; }
+.food-item { width: 150px; height: 120px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--screen-bg); border: 3px solid var(--screen-dark); border-radius: 10px; color: var(--screen-dark); position: relative; }
+.food-item .emoji { font-size: 48px; margin-bottom: 10px; }
+#food-description, #reward-description { font-size: 14px; height: 30px; }
+.modal-actions { margin-top: 20px; display: flex; justify-content: center; gap: 20px; }
+.modal-actions button, .slider-container button { padding: 10px 15px; background-color: var(--button-color); box-shadow: 0 5px 0 var(--button-shadow); }
+.gear-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; background: none; border: none; z-index: 101; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5)); }
+.settings-grid { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center; text-align: left; }
+#reset-progress-btn { background-color: #c92a2a; box-shadow: 0 5px 0 #8c1d1d; margin-top: 20px; width: 100%; }
+@keyframes screen-shake { 0%, 100% { transform: translate(0, 0); } 25%, 75% { transform: translate(-2px, 2px); } 50% { transform: translate(2px, -2px); } }
+.shake { animation: screen-shake 0.3s ease-in-out; }
+#chat-container { margin-top: 10px; padding: 5px; background-color: rgba(0,0,0,0.1); border-radius: 5px; transition: all 0.3s ease; }
+#chat-container.hidden { display: none; }
+#chat-form { display: flex; gap: 5px; }
+#chat-input { flex-grow: 1; font-family: 'Press Start 2P', cursive; background: #fff; border: 2px solid var(--button-shadow); padding: 8px; font-size: 10px; border-radius: 5px; }
+#chat-form button { width: 45px; padding: 8px 0; font-size: 18px; background-color: var(--accent-color); box-shadow: 0 5px 0 var(--accent-shadow); }
+.food-quantity {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    background-color: var(--accent-color);
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    line-height: 24px;
+    text-align: center;
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 5;
+}
+
+/* --- NEW STYLES for Name Modal --- */
+#name-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+#name-input {
+    font-family: 'Press Start 2P', cursive;
+    background: #fff;
+    border: 2px solid var(--button-shadow);
+    padding: 12px;
+    font-size: 12px;
+    width: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+}
+#start-journey-btn {
+    background-color: var(--accent-color);
+    box-shadow: 0 5px 0 var(--accent-shadow);
+    font-size: 12px;
+    padding: 15px 10px;
+}
+#start-journey-btn:active:not(:disabled) {
+    box-shadow: 0 2px 0 var(--accent-shadow);
+}
+
+button:not(:disabled):hover {
+    transform: translateY(-2px); /* Makes the button "lift" slightly */
+    filter: brightness(1.15); /* Makes it a bit brighter */
+}
+
+/* Make the 3D effect more pronounced on hover */
+#start-timer-btn:not(:disabled):hover {
+    box-shadow: 0 7px 0 var(--accent-shadow);
+}
+
+.action-buttons button:not(:disabled):hover,
+#chat-form button:not(:disabled):hover {
+    box-shadow: 0 7px 0 var(--button-shadow);
+}
+
+.modal-actions button:not(:disabled):hover, 
+.slider-container button:not(:disabled):hover {
+    box-shadow: 0 7px 0 var(--button-shadow);
+}
